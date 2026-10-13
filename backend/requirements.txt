@@ -18,12 +18,15 @@ kombu==5.6.2
 packaging==26.3
 pillow==12.3.0
 prompt_toolkit==3.0.53
+psycopg==3.3.6
+psycopg-binary==3.3.6
 psycopg2-binary==2.9.13
 pycparser==3.0
 pydyf==0.12.1
 PyJWT==2.15.1
 pyphen==0.18.1
 python-dateutil==2.9.0.post0
+python-decouple==3.8
 redis==8.1.0
 six==1.17.0
 sqlparse==0.6.0
