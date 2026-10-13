@@ -38,7 +38,7 @@ class User(AbstractUser):
         with transaction.atomic():
             user = User.objects.select_for_update().get(pk=self.pk)
             user.failed_login_attempts += 1
-            if user.failed_login_attempts >= settings.LOCKOUT_MAX_ATTEMTS:
+            if user.failed_login_attempts >= settings.LOCKOUT_MAX_ATTEMPTS:
                 user.lockout_until = timezone.now() + timedelta(minutes=settings.LOCKOUT_MINUTES)
                 user.failed_login_attempts = 0
             user.save(update_fields=["failed_login_attempts", "lockout_until"])

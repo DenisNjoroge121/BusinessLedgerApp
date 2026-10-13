@@ -13,7 +13,7 @@ class AccountLocked(APIException):
 
 class LockoutTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
-        user =  User.objects.filter(username=attrs.get(self.username_fields)).first()
+        user = User.objects.filter(username=attrs.get(self.username_field)).first()
         if user and user.is_locked():
             raise AccountLocked()
         try:
@@ -25,7 +25,7 @@ class LockoutTokenObtainPairSerializer(TokenObtainPairSerializer):
                 if user.is_locked():
                     raise AccountLocked()
             raise
-        self.user.reset.attempts()
+        self.user.reset_attempts()
         data["role"] = self.user.role
         data["business_id"] = self.user.business_id
         return data
@@ -39,9 +39,11 @@ class RegisterOwnerSerializer(serializers.ModelSerializer):
         fields = ["username", "password", "email", "phone_number", "business_name"]
 
     @transaction.atomic
-    def create(self, validate_data):
+    def create(self, validated_data):
         business = Business.objects.create(name=validated_data.pop("business_name"))
-        return User.objects.create_user(business=business, role=User.Role.Owner, **validated_data)
+        return User.objects.create_user(
+            business=business, role=User.Role.OWNER, **validated_data
+        )
 
 class MeSerializer(serializers.ModelSerializer):
     business_name = serializers.CharField(source="business.name", read_only=True)
