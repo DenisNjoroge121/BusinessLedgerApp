@@ -1,283 +1,199 @@
 # Business Ledger App
 
-A comprehensive business ledger application built with a Django REST backend and React Native frontend.
+A simple business ledger application split into a Django REST API backend and a React Native/Expo mobile client.
 
-## Project Structure
+The repository is organized as a monorepo:
 
-```
+- `backend/` contains the Django project and API
+- `mobile/` contains the Expo-based mobile app
+
+## Project structure
+
+```text
 BusinessLedgerApp/
-├── backend/          # Django REST Framework backend
-│   ├── config/       # Django configuration
-│   ├── ledger/       # Ledger application
-│   ├── manage.py     # Django management script
+├── backend/
+│   ├── accounts/           # Custom user/auth logic
+│   ├── config/             # Django settings and URL configuration
+│   ├── ledger/             # Ledger-related models, serializers, views, and logic
+│   ├── .gitignore
+│   ├── manage.py
 │   └── requirements.txt
-└── frontend/         # React Native Expo app
-    ├── App.tsx       # Main app component
-    ├── package.json
-    └── assets/       # App assets
+├── mobile/
+│   ├── App.tsx             # App entry point
+│   ├── app.json            # Expo app metadata
+│   ├── package.json        # Mobile app dependencies and scripts
+│   ├── index.ts            # App bootstrap
+│   ├── tsconfig.json
+│   ├── LICENSE
+│   └── assets/
+├── README.md
+└── .gitignore
 ```
 
-## Technology Stack
+## Tech stack
 
 ### Backend
-- **Python 3.x**
-- **Django 6.1.2** - Web framework
-- **Django REST Framework 3.18.3** - REST API
-- **PostgreSQL** - Database (psycopg2-binary)
-- **Celery 5.6.3** - Task queue
-- **Redis 8.1.0** - Message broker & caching
-- **JWT Authentication** - djangorestframework-simplejwt
+- Python 3
+- Django 6.1.2
+- Django REST Framework 3.18.3
+- PostgreSQL support via `psycopg` / `psycopg2-binary`
+- JWT authentication via `djangorestframework_simplejwt`
+- Redis + Celery support for async/background work
+- `python-decouple` for environment configuration
 
-### Frontend
-- **React Native 0.86.3** - Mobile framework
-- **Expo 57.0.27** - React Native development platform
-- **TypeScript** - Type-safe JavaScript
-- **React Navigation** - Navigation library
-- **Axios** - HTTP client
+### Mobile app
+- React Native 0.86.3
+- Expo 57
+- TypeScript
+- React Navigation
+- Expo Secure Store and local authentication support
+
+## Features
+
+- User authentication and account management
+- Ledger/business transaction management
+- REST API built with Django and DRF
+- Mobile client for interacting with the backend
+- JWT-based secure access
 
 ## Prerequisites
 
-Before you begin, ensure you have the following installed:
+Before starting, make sure you have the following installed:
 
-### For Backend Development
-- Python 3.8 or higher
-- PostgreSQL 12 or higher
-- Redis Server
-- pip (Python package manager)
-- virtualenv (recommended)
-
-### For Frontend Development
-- Node.js 18.x or higher
+- Python 3.9+
+- PostgreSQL (recommended for local development)
+- Redis (if you want to run background workers)
+- Node.js 18+
 - npm or yarn
-- Expo CLI: `npm install -g expo-cli`
 
-## Backend Installation
+## Backend setup
 
-### 1. Clone the Repository
+1. Open a terminal and move into the backend folder:
+
 ```bash
-git clone https://github.com/DenisNjoroge121/BusinessLedgerApp.git
-cd BusinessLedgerApp/backend
+cd backend
 ```
 
-### 2. Create Virtual Environment
+2. Create and activate a virtual environment:
+
 ```bash
-# On macOS/Linux
-python3 -m venv venv
+python -m venv venv
+
+# macOS/Linux
 source venv/bin/activate
 
-# On Windows
-python -m venv venv
+# Windows
 venv\Scripts\activate
 ```
 
-### 3. Install Dependencies
+3. Install Python dependencies:
+
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Set Up Environment Variables
-Create a `.env` file in the `backend/` directory with the following variables:
+4. Create a `.env` file in `backend/` with the database and app settings:
+
 ```env
 DEBUG=True
-SECRET_KEY=your-secret-key-here
-ALLOWED_HOSTS=localhost,127.0.0.1
-
-# Database
-DB_ENGINE=django.db.backends.postgresql
+SECRET_KEY=your-secret-key
 DB_NAME=businessledger
 DB_USER=postgres
 DB_PASSWORD=your-db-password
 DB_HOST=localhost
 DB_PORT=5432
-
-# Redis
-REDIS_URL=redis://localhost:6379/0
-
-# CORS
-CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:19000
 ```
 
-### 5. Configure PostgreSQL Database
+5. Create the PostgreSQL database if needed:
+
 ```bash
-# Create database (if not exists)
 psql -U postgres -c "CREATE DATABASE businessledger;"
-
-# Create user (if not exists)
-psql -U postgres -c "CREATE USER ledger_user WITH PASSWORD 'your-password';"
 ```
 
-### 6. Run Migrations
+6. Run database migrations:
+
 ```bash
 python manage.py migrate
 ```
 
-### 7. Create Superuser (Admin)
-```bash
-python manage.py createsuperuser
-```
+7. Start the Django development server:
 
-### 8. Start Redis Server
-```bash
-# macOS (if installed via Homebrew)
-redis-server
-
-# Linux
-redis-server
-
-# Docker
-docker run -d -p 6379:6379 redis:latest
-```
-
-### 9. Start Django Development Server
 ```bash
 python manage.py runserver
 ```
 
-The backend will be available at `http://localhost:8000`
+The API will be available at:
 
-### 10. Start Celery Worker (Optional, for background tasks)
+- `http://localhost:8000`
+
+Optional: create a superuser for admin access:
+
 ```bash
-celery -A config worker -l info
+python manage.py createsuperuser
 ```
 
-## Frontend Installation
+## Mobile app setup
 
-### 1. Navigate to Frontend Directory
+1. Move into the mobile folder:
+
 ```bash
-cd BusinessLedgerApp/frontend
+cd mobile
 ```
 
-### 2. Install Dependencies
+2. Install dependencies:
+
 ```bash
 npm install
-# or
-yarn install
 ```
 
-### 3. Start the Expo Development Server
+3. Start the Expo app:
+
 ```bash
 npm start
-# or
-yarn start
 ```
 
-### 4. Run on Different Platforms
+You can then launch the app in:
 
-#### Run on Web
+- an Android emulator
+- an iOS simulator (macOS only)
+- Expo Go on a physical device
+
+Common scripts:
+
 ```bash
+npm run android
+npm run ios
 npm run web
 ```
 
-#### Run on Android
-```bash
-npm run android
-```
-Requires Android SDK and Android emulator setup.
+## Running the project together
 
-#### Run on iOS
-```bash
-npm run ios
-```
-Requires macOS and Xcode.
+- Start the backend API first.
+- Then start the mobile app and ensure it points to the correct backend URL.
+- If needed, update the API base URL in the mobile app configuration or environment-specific code.
 
-#### Using Expo Go App
-1. Download Expo Go from your device's app store
-2. Scan the QR code displayed in the terminal after running `npm start`
-3. The app will load on your device
+## Development notes
 
-## Development Workflow
-
-### Backend Development
-1. Activate virtual environment: `source venv/bin/activate`
-2. Make changes to backend code
-3. Test with: `python manage.py test`
-4. Run development server: `python manage.py runserver`
-
-### Frontend Development
-1. Ensure backend is running
-2. Update API endpoints if needed in axios configuration
-3. Run Expo: `npm start`
-4. Test on emulator or device
-
-## API Documentation
-
-Once the backend is running, access:
-- Admin Panel: `http://localhost:8000/admin/`
-- API Root: `http://localhost:8000/api/`
-- API Browsable Interface available at `/api/` endpoints
-
-## Database Management
-
-### Create Migrations
-```bash
-python manage.py makemigrations
-```
-
-### Apply Migrations
-```bash
-python manage.py migrate
-```
-
-### Reset Database
-```bash
-python manage.py flush
-```
-
-## Troubleshooting
-
-### Backend Issues
-
-**Port 8000 already in use:**
-```bash
-python manage.py runserver 8001
-```
-
-**PostgreSQL connection error:**
-- Ensure PostgreSQL is running
-- Check credentials in `.env` file
-- Verify database name exists
-
-**Redis connection error:**
-- Ensure Redis server is running
-- Check `REDIS_URL` in `.env` file
-
-### Frontend Issues
-
-**Expo port already in use:**
-```bash
-expo start -p 19001
-```
-
-**Module not found:**
-```bash
-rm -rf node_modules
-npm install
-```
-
-**Clear cache:**
-```bash
-npm start --clear
-```
-
-## Additional Resources
-
-- [Django Documentation](https://docs.djangoproject.com/)
-- [Django REST Framework](https://www.django-rest-framework.org/)
-- [React Native Documentation](https://reactnative.dev/)
-- [Expo Documentation](https://docs.expo.dev/)
-- [PostgreSQL Documentation](https://www.postgresql.org/docs/)
-
-## Contributing
-
-1. Create a feature branch: `git checkout -b feature/YourFeatureName`
-2. Commit your changes: `git commit -m 'Add YourFeatureName'`
-3. Push to the branch: `git push origin feature/YourFeatureName`
-4. Submit a Pull Request
+- The backend uses Django's default project layout with `config/` as the settings package.
+- The mobile app is a standalone Expo project under `mobile/`.
+- The project is structured as a backend + mobile app monorepo instead of a single app.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project includes a license in the `mobile/` directory. Please refer to the repository files for licensing details.
+
+## Contributing
+
+1. Create a feature branch
+2. Make your changes
+3. Commit and push your branch
+4. Open a pull request for review
 
 ## Support
 
-For issues or questions, please open an issue on GitHub or contact the project maintainer.
+If you run into setup issues, confirm that:
+
+- PostgreSQL is running
+- your `.env` values match local database credentials
+- the backend server is started before the mobile app
+- the mobile app is using the correct API host and port
