@@ -135,3 +135,26 @@ class LedgerEntry(models.Model):
 
     def __str__(self):
         return f"{self.entry_type} KSh {self.amount} ({self.customer.name})"
+
+class AuditLog(models.Model):
+    business = models.ForeignKey(
+        "accounts.Business", on_delete=models.CASCADE, related_name="audit_logs"
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True
+    )
+    action = models.CharField(max_length=255)
+    ledger_entry = models.ForeignKey(
+        LedgerEntry, on_delete=models.SET_NULL, null=True, blank=True
+    )
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    device_info = models.CharField(max_length=255, blank=True)  # User-Agent
+    device_id = models.CharField(max_length=100, blank=True)    # sent by the app
+    is_flagged = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-timestamp", "-id"]
+
+    def __str__(self):
+        return f"{self.timestamp:%Y-%m-%d %H:%M} {self.action}"

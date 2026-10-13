@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 from decouple import config
+from decimal import Decimal
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -165,3 +166,5 @@ SIMPLE_JWT = {
 
 LOCKOUT_MAX_ATTEMPTS = 5
 LOCKOUT_MINUTES = 30
+
+LARGE_TRANSACTION_THRESHOLD = Decimal("20000.00")
