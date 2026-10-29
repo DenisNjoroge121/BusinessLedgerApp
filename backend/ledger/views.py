@@ -22,8 +22,14 @@ class CustomerViewSet(viewsets.ModelViewSet):
     permission_classes = [IsOwnerOrHelper]
 
     def get_queryset(self):
-        # Filter customers based on the user's categories
-        return Customer.objects.filter(category__owner=self.request.user)
+        queryset = Customer.objects.filter(category__owner=self.request.user)
+        
+        # ADD THIS: Filter by category ID if provided in the URL (e.g., ?category=1)
+        category_id = self.request.query_params.get('category')
+        if category_id:
+            queryset = queryset.filter(category_id=category_id)
+            
+        return queryset
 
 class LedgerViewSet(viewsets.ModelViewSet):
     serializer_class = LedgerEntrySerializer
