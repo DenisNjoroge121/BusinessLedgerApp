@@ -103,6 +103,13 @@ export default function LoginScreen() {
               <Text style={styles.loginButtonText}>Secure Login</Text>
             )}
           </TouchableOpacity>
+
+          <View style={styles.footerTextContainer}>
+            <Text style={styles.footerText}>Don't have an account? </Text>
+            <TouchableOpacity onPress={() => router.push('/(auth)/register')}>
+              <Text style={styles.linkText}>Register here</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -188,4 +195,19 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
+  footerTextContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  footerText: {
+    color: '#666',
+    fontSize: 14,
+  },
+  linkText: {
+    color: '#1A237E',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+
 });

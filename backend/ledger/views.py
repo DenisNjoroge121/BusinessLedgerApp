@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import BusinessCategory, Customer, LedgerEntry
 from .serializers import CategorySerializer, CustomerSerializer, LedgerEntrySerializer
-from .permissions import IsOwnerOrHelper, IsOwnerOnly
+from accounts.permissions import IsOwnerOrHelper, IsOwnerOnly
 from .services import create_ledger_entry # The function we wrote in Phase 1
 
 class CategoryViewSet(viewsets.ModelViewSet):

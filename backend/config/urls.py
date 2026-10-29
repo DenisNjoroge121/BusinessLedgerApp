@@ -19,6 +19,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from ledger.views import CategoryViewSet, CustomerViewSet, LedgerViewSet
+from accounts.views import RegisterView
 
 router = DefaultRouter()
 router.register(r'categories', CategoryViewSet, basename='category')
@@ -29,9 +30,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     # Auth Endpoints
+    path('api/auth/register/', RegisterView.as_view(), name='auth_register'),
     path('api/auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     
     # Business Endpoints
     path('api/', include(router.urls)),
+    
 ]
